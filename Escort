@@ -1,0 +1,27 @@
+import random
+
+# Assume these are the personality traits we're working with
+personalities = ['Optimistic', 'Pessimistic', 'Calm', 'Irritable', 'Friendly', 'Aloof']
+
+# Our character
+character = {
+    'name': "Ulquiorra's Character",
+    'personality': random.choice(personalities)  # Starting with a random personality
+}
+
+def get_twitter_vote():
+    # This function should connect to the Twitter API, but for now, we'll fake it
+    return random.choice(personalities)
+
+def update_character_personality(character):
+    new_personality = get_twitter_vote()
+    if character['personality'] != new_personality:
+        print(f"{character['name']}'s personality has changed from {character['personality']} to {new_personality}!")
+        character['personality'] = new_personality
+    else:
+        print("Not enough votes to change personality. Character remains the same.")
+
+# Update the character's personality each time the script runs
+update_character_personality(character)
+
+print(f"Current Character Status: {character['name']} - {character['personality']}")
