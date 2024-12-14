@@ -1,0 +1,47 @@
+from moviepy.editor import *
+import textwrap
+
+# Story content - This would typically come from your storytelling system
+story = """
+Alicia embarked on a quest to find the legendary Sword of Light. 
+She traveled through dark forests, over treacherous mountains, 
+and finally reached the ancient ruins where the sword was said to be hidden.
+"""
+
+# Function to convert text to speech - placeholder for actual TTS implementation
+def text_to_speech(text, output_file):
+    # This is where you would implement or call your TTS service
+    # For example, with Google Text-to-Speech API or a local library like pyttsx3
+    print(f"Generating speech for: {text[:50]}...")
+    # Placeholder: Here you would save the audio file
+    # For now, we just assume it's done and return the file path
+    return "speech.mp3"
+
+# Generate audio from text
+audio_path = text_to_speech(story, "story_audio.mp3")
+
+# Load background video, images, etc. - Here we're using a placeholder
+background_video = VideoFileClip("background_video.mp4")  # Replace with actual path
+alicia_image = ImageClip("alicia.jpg").set_duration(background_video.duration)
+
+# Wrap text for display
+wrapped_text = textwrap.fill(story, width=40)  # Adjust width as needed
+
+# Create text clips
+text_clip = TextClip(wrapped_text, fontsize=24, color='white', font="Arial")
+text_clip = text_clip.set_position(('center', 'bottom')).set_duration(background_video.duration)
+
+# Load audio
+audio_clip = AudioFileClip(audio_path)
+
+# Combine everything
+video = CompositeVideoClip([background_video, alicia_image.set_pos(('center', 'center')), text_clip])
+video = video.set_audio(audio_clip)
+
+# Set the final video duration to match the audio
+final_video = video.subclip(0, audio_clip.duration)
+
+# Write the result to a file
+final_video.write_videofile("Alicia_Quest.mp4", fps=24)
+
+print("Video for Alicia's story has been generated!")
