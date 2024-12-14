@@ -1,0 +1,54 @@
+from moviepy.editor import *
+import textwrap
+
+# Story plot - This would typically come from your narrative system or be hardcoded
+story_plot = """
+Lisa, an adventurer, enters a dark cave seeking treasure. 
+She lights her torch, revealing ancient carvings and a sleeping dragon. 
+She quietly navigates past the dragon to find a chest filled with gold.
+"""
+
+# Function to convert text to speech - placeholder for actual TTS implementation
+def text_to_speech(text, output_file):
+    # Here you would implement or call your TTS service
+    print(f"Generating speech for: {text[:50]}...")
+    # Placeholder: Here you would save the audio file
+    return "speech.mp3"
+
+# Generate audio from text
+audio_path = text_to_speech(story_plot, "story_audio.mp3")
+
+# Load assets - Here we're using placeholders
+background_video = VideoFileClip("cave_background.mp4")  # Replace with actual path
+torch_image = ImageClip("torch.jpg").set_duration(background_video.duration)
+dragon_image = ImageClip("dragon.jpg").set_duration(background_video.duration)
+chest_image = ImageClip("treasure_chest.jpg").set_duration(background_video.duration)
+
+# Wrap text for display
+wrapped_text = textwrap.fill(story_plot, width=40)  # Adjust width as needed
+
+# Create text clips
+text_clip = TextClip(wrapped_text, fontsize=24, color='white', font="Arial")
+text_clip = text_clip.set_position(('center', 'bottom')).set_duration(background_video.duration)
+
+# Load audio
+audio_clip = AudioFileClip(audio_path)
+
+# Composite video clips
+video_clips = [
+    background_video,
+    torch_image.set_pos(('center', 0.3)).set_duration(5),  # Show torch for first 5 seconds
+    dragon_image.set_pos(('center', 0.3)).set_duration(5).set_start(5),  # Dragon appears next
+    chest_image.set_pos(('center', 0.3)).set_duration(5).set_start(10)  # Chest last 5 seconds
+]
+
+video = CompositeVideoClip(video_clips)
+video = video.set_audio(audio_clip)
+
+# Set the final video duration to match the audio
+final_video = video.subclip(0, audio_clip.duration)
+
+# Write the result to a file
+final_video.write_videofile("Lisa_Cave_Adventure.mp4", fps=24)
+
+print("Video for Lisa's cave adventure has been generated!")
